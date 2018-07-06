@@ -40,3 +40,8 @@ register_deactivation_hook( __FILE__, 'taskbook_remove_role' );
 // Add capabilities
 register_activation_hook( __FILE__, 'taskbook_add_capabilities' );
 register_deactivation_hook( __FILE__, 'taskbook_remove_capabilities' );
+
+/**
+ * Add in CMB2 for fun new fields.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/CMB2-functions.php';

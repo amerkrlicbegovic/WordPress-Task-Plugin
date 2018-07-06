@@ -23,3 +23,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Task Book. If not, see https://www.gnu.org/licenses/gpl.html.
 */
+
+/**
+ * Register Task post type.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/posttypes.php';

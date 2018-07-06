@@ -39,3 +39,4 @@ register_deactivation_hook( __FILE__, 'taskbook_remove_role' );
 
 // Add capabilities
 register_activation_hook( __FILE__, 'taskbook_add_capabilities' );
+register_deactivation_hook( __FILE__, 'taskbook_remove_capabilities' );

@@ -54,3 +54,11 @@ function taskbook_cpt_init() {
 }
 
 add_action( 'init', 'taskbook_cpt_init' );
+
+/**
+ * Flush rewrite rules on activation.
+ */
+function taskbook_rewrite_flush() {
+	taskbook_cpt_init();
+	flush_rewrite_rules();
+}

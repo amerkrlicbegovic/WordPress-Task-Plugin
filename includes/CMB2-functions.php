@@ -15,6 +15,35 @@ if ( file_exists( dirname( __FILE__ ) . '/cmb2/init.php' ) ) {
 	require_once dirname( __FILE__ ) . '/CMB2/init.php';
 }
 
+/**
+ * Manually render Status field.
+ */
+function taskbook_status_cb( $field_args, $field ) {
+	$classes      = $field->row_classes();
+	$id           = $field->args( 'id' );
+	$label        = $field->args( 'name' );
+	$status       = get_post_meta( get_the_ID(), 'task_status', true );
+	?>
+
+	<div class="cmb-row custom-field-row <?php echo esc_attr( $classes ); ?>">
+		<div class="cmb-th">
+			<label><?php echo esc_attr( $label ); ?>
+		</div>
+		<div class="cmb-td">
+			<p>
+				<?php
+				if ( $status != true ) {
+					echo 'In progress';
+				} else {
+					echo 'Completed';
+				}
+				?>
+			</p>
+		</div>
+	</div>
+	<?php
+
+}
 
 /**
  * Only show this box in the CMB2 REST API if the user is logged in.
@@ -99,5 +128,10 @@ function taskbook_register_rest_api_box() {
 		'before'  => '<p>' . esc_html__( 'What was the actual experience of working with the task like?', 'taskbook' ) . '</p>',
 	) );
 
+	$cmb_rest->add_field( array(
+		'name'             => esc_html__( 'Task status', 'taskbook' ),
+		'id'               => $prefix . 'task_status',
+		'render_row_cb'    => 'taskbook_status_cb',
+	) );
 
 }

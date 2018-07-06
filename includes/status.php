@@ -28,3 +28,55 @@ function taskbook_change_status( $post_id, $post, $update ) {
 		}
 	}
 }
+
+/**
+ * Register new REST field for task_status.
+ *
+ * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/modifying-responses/
+ * @link http://v2.wp-api.org/extending/modifying/
+ */
+add_action( 'rest_api_init', 'taskbook_register_task_status' );
+
+function taskbook_register_task_status() {
+	register_rest_field(
+		'task',
+		'task_status',
+		array(
+			'get_callback'    => 'taskbook_get_task_status',
+			'update_callback' => 'taskbook_update_task_status',
+			'schema'          => null,
+		)
+	);
+}
+
+/**
+ * Handler for getting custom field data.
+ *
+ * @param array $object Details of current post.
+ * @param string $field_name Name of field.
+ * @param WP_REST_Request $request Current request
+ *
+ * @return mixed
+ */
+function taskbook_get_task_status( $object, $field_name, $request ) {
+	return get_post_meta( $object['id'], $field_name, true );
+}
+
+/**
+ * Handler for updating custom field data.
+ *
+ * @since 0.1.0
+ *
+ * @param mixed $value The value of the field
+ * @param object $object The object from the response
+ * @param string $field_name Name of field
+ *
+ * @return bool|int
+ */
+function taskbook_update_task_status( $value, $object, $field_name ) {
+	if ( is_bool( $value ) !== true ) {
+		return;
+	}
+
+	return update_post_meta( $object->ID, $field_name, $value );
+}

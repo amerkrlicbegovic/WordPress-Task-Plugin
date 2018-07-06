@@ -52,3 +52,30 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/status.php';
  * Add in CMB2 for fun new fields.
  */
 require_once plugin_dir_path( __FILE__ ) . 'includes/CMB2-functions.php';
+
+
+/**
+ * Grant task access for index pages for certain users.
+ */
+add_action( 'pre_get_posts', 'taskbook_grant_access' );
+
+function taskbook_grant_access( $query ) {
+	// Make sure the query contains a post_type query_var,
+	// otherwise it's definitely not a request for Task(s):
+	if ( isset($query->query_vars['post_type']) ) {
+		// Check if the request is for the Task post type…
+		if ( $query->query_vars['post_type'] == 'task' ) {
+			// … and that this is a REST request:
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				if ( current_user_can( 'editor' ) || current_user_can( 'administrator') ) {
+					// If so, Editors and Administrators see all private tasks…
+					$query->set( 'post_status', 'private' );
+				} elseif ( current_user_can( 'task_logger' ) ) {
+					// … and Task Loggers see only their own tasks:
+					$query->set( 'post_status', 'private' );
+					$query->set( 'author', get_current_user_id() );
+				}
+			}
+		}
+	}
+}
